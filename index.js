@@ -1,23 +1,29 @@
-var http = require("http"),
-  path = require("path"),
-  express = require("express"),
-  bodyParser = require("body-parser"),
-  mongoose = require("mongoose");
-var router = require("express").Router();
-
-var isProdEnv = process.env.NODE_ENV === "PRODUCTION";
+var express = require("express");
+var bodyParser = require("body-parser");
+const config = require("./utils/config");
+const logger = require("./utils/logger");
 
 var app = express();
-app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.MONGODB_URI);
+app.use("/user", require("./controllers/user-controller.js"));
 
-router.use("/api", require("./routes"));
+logger.log("Initiating Mongo Connection");
+
+config.setUpMongoose().then(
+  (res) => {
+    logger.log("Completing Mongo Connection");
+  },
+  (err) => {
+    logger.log("Error Mongo Connection");
+  }
+);
 
 app.use((req, res, next) => {
-  var err = new Error("Not Found");
+  var err = new Error("Request Not Found");
   err.status = 404;
   next(err);
 });
@@ -32,6 +38,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-var server = app.listen(process.env.PORT || 3000, function () {
+var server = app.listen(config.PORT, function () {
   console.log("Server is running on" + server.address().port);
 });

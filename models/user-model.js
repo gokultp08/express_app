@@ -2,19 +2,20 @@ var mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    userName: {
-      type: String,
-      minlength: 4,
-      required: true,
-    },
+    userId: String,
     name: {
       type: String,
-      minlength: 4,
+      // minlength: 4,
+      required: true,
+    },
+    email: {
+      type: String,
+      // minlength: 4,
       required: true,
     },
     password: {
       type: String,
-      minlength: 8,
+      // minlength: ,
       required: true,
     },
     additionalDetail: String,
@@ -26,4 +27,4 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model("User", userSchema);
 
-export default User;
+module.exports = User;
