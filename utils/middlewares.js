@@ -1,4 +1,6 @@
 const User = require("../models/user-model");
+const jwt = require("jsonwebtoken");
+const config = require("./config");
 
 const userExists = async (req, res, next) => {
   // const existingUser = await User.findOne({
@@ -9,4 +11,11 @@ const userExists = async (req, res, next) => {
   // }
   next();
 };
-module.exports = { userExists };
+const validateToken = (req, res, next) => {
+  const token = jwt.verify(req.token, config.JWT_KEY);
+  if (!req.token || !token?.id) {
+    return res.status(401).json({ error: "invalid token" });
+  }
+  return token;
+};
+module.exports = { userExists, validateToken };

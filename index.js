@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.use("", require("./controllers/auth-controller.js"));
 app.use("/user", require("./controllers/user-controller.js"));
 
 logger.log("Initiating Mongo Connection");

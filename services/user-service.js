@@ -9,7 +9,7 @@ async function getUser(req, res, next) {
   if (existingUser == null) {
     return res.status(404).send("Cannot find the item");
   }
-  res.status(200).json(existingUser);
+  res.status(200).json(existingUser.getMappedData());
 }
 
 async function addUser(req, res) {
@@ -34,7 +34,7 @@ async function addUser(req, res) {
   });
 
   const savedUser = await user.save();
-  res.status(201).json(savedUser);
+  res.status(201).json(savedUser.getMappedData());
 }
 
 async function editUser(req, res, next) {
@@ -52,7 +52,7 @@ async function editUser(req, res, next) {
     req.body,
     function (err, user) {
       if (err) return res.status(500).send("Error upadting db");
-      res.status(200).send(user);
+      res.status(200).send(user.getMappedData());
     }
   );
 }
@@ -71,14 +71,14 @@ async function deleteUser(req, res, next) {
     },
     function (err, user) {
       if (err) return res.status(500).send("Error upadting db");
-      res.status(200).send(user);
+      res.status(200).send(user.getMappedData());
     }
   );
 }
 
 async function getAllUsers(req, res, next) {
   const existingUser = await User.find();
-  res.status(200).json(existingUser);
+  res.status(200).json(existingUser.map((item) => item.getMappedData()));
 }
 
 module.exports = { getUser, addUser, editUser, deleteUser, getAllUsers };
